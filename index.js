@@ -7,7 +7,6 @@ app.post('/refs', async (req, res) => {
   try {
     const references = await getDataFromAPI();
     const dbData = await postDataToDatabase(references);
-    console.log(dbData);
     res.status(200).json('Successfully Posted to the database!')
   } catch(error) {
     console.log(error);

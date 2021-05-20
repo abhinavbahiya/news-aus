@@ -8,7 +8,10 @@ module.exports.getDataFromAPI = async () => {
   try {
     const { data } = await axios.get(REFERENCE);
     const references = [];
-    for(const [key, value] of Object.entries(data.content.references)) {
+    for(const [key, value] of Object.entries(data.content && data.content.references)) {
+      const authors = value.authors.map(author => {
+        return author.name;
+      });
       const obj = {
         articleId: value.id,
         title: value.headline.default,
@@ -17,8 +20,9 @@ module.exports.getDataFromAPI = async () => {
         dateLive: value.date.live,
         dateUpdated: value.date.updated,
         originalSource: value.rightsMetadata.originatedSource,
-        authors: value.authors[0].name,
-        section: value.target.sections[0].id
+        authors: authors.join(', '),
+        section: value.target.sections[0].id,
+        inDt: value.target.domains.includes('dailytelegraph.com.au')
       }
       references.push(obj);
     } 
